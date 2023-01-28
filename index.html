@@ -19,7 +19,7 @@
 
         var json = "";
 
-        var url = "http://localhost:8080/api/encrypt";
+        var url = "https://astralsafeserver.onrender.com/api/encrypt";
 
         await $.post(url, { plaintext: plaintext },
             function (returnedData) {
@@ -53,7 +53,7 @@
 
         var ciphertext = document.getElementById("msg").value;
 
-        var url = "http://localhost:8080/api/decrypt";
+        var url = "https://astralsafeserver.onrender.com/api/decrypt";
 
         var json = "";
 

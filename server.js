@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('./public'));
 
 
-const PORT = 8080;
+const PORT = 80;
 
 app.get('/', (req, res) => {
 
