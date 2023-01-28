@@ -41,4 +41,4 @@ output: {"plaintext":"helloworld"}
 
 # GUI
 
-A simple web interface can also be accessed by visiting http://localhost:8080 or the github page running on this repository.
+A simple web interface can also be accessed by visiting http://localhost:8080 or https://astralsafeserver.onrender.com
