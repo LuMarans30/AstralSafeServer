@@ -1,6 +1,6 @@
 module.exports = {
     /**
-     * Get a random key from the ANU Quantum Random Number Generator
+     * Get a random key from the ANU Quantum Random String Generator
      * @returns {Promise<string>} A random key
      */
     generateKey: async function generateKey() 
