@@ -2,7 +2,7 @@
 A  basic webserver that encrypts and decrypts a message using one time pad and a quantum random string as a key.
 
 
-# USAGE:
+# usage:
 
 You can send a POST HTTP request to the following endpoints of http://localhost:8080
 
@@ -17,7 +17,7 @@ You can send a POST HTTP request to the following endpoints of http://localhost:
 
 with the params: {"plaintext": "hello world"} or {"ciphertext": "test"} for the corresponding endpoints.
 
-# EXAMPLE:
+# example:
 
 curl -X POST -d '{""plaintext"": ""hello world""}' -H "Content-Type: application/json" http://localhost:8080/api/encrypt
 
