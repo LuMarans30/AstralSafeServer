@@ -23,6 +23,10 @@ curl -X POST -d '{""plaintext"": ""hello world""}' -H "Content-Type: application
 
 output: {"encrypted":"lgjpdqffex"}
 
+<br />
+
+Please note: the encrypted string will be different each time you make a request to the server.
+
 <br /><br />
 
 curl -X POST -d '{""ciphertext"": ""lgjpdqffex""}' -H "Content-Type: application/json" http://localhost:8080/api/decrypt
