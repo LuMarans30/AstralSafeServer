@@ -4,7 +4,7 @@ A  basic webserver that encrypts and decrypts a message using one time pad and a
 
 # usage
 
-You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
+You can send a POST HTTP request to the following endpoints of http://localhost:8080 or http://151.76.244.12:8080/ with the params: <br />
 {"plaintext": ""} or {"ciphertext": ""}.
 
 <br />
@@ -41,4 +41,4 @@ output: {"plaintext":"helloworld"}
 
 # GUI
 
-A simple web interface can also be accessed by visiting http://localhost:8080
+A simple web interface can also be accessed by visiting http://localhost:8080 or http://151.76.244.12:8080/
