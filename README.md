@@ -4,7 +4,7 @@ A  basic webserver that encrypts and decrypts a message using one time pad and a
 
 # usage:
 
-You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: 
+You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
 {"plaintext": ""} or {"ciphertext": ""}.
 
 <br />
