@@ -40,8 +40,8 @@ output: {"plaintext":"helloworld"}
 
 # GUI
 
-You can also access to a simple web interface by going to http://localhost:8080
+A simple web interface can also be accessed by visiting http://localhost:8080.
 
 <br />
 
-The github page running on this repository is a NON working demo of the project since github allows only static web pages.
+The github page running on this repository is a NON-working demo of the project, since github only allows static web pages.
