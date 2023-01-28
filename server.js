@@ -1,14 +1,14 @@
 var express = require('express');
 var keygen = require('./keygen.js');
-let pad = require("one-time-pad");
-
-const bodyParser = require('body-parser');
+var pad = require('./otp.js');
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('./public'));
+
 
 const PORT = 8080;
 
@@ -16,14 +16,14 @@ app.get('/', (req, res) => {
 
   console.log('GET /');
 
-  res.send('SEND POST REQUEST TO /api/encrypt TO ENCRYPT AND /api/decrypt TO DECRYPT');
+  res.sendFile('index.html', { root: './' });
 });
 
 let key = "";
 
 app.post('/api/encrypt', (req, res) => {
 
-  console.log('POST /api/encrypt');
+  console.log('POST /api/encrypt from IP: ' + req.socket.remoteAddress);
 
   let plaintext = req.body;
 
@@ -31,33 +31,60 @@ app.post('/api/encrypt', (req, res) => {
 
   keygen.generateKey().then(function (result) {
 
-    //Remove spaces from string
-
-    plaintext.plaintext = plaintext.plaintext.replace(/\s/g, "");
-
-    //Substring the key to the length of the plaintext
-
-    result = result.substring(0, plaintext.plaintext.length);
-
-    encrypted = pad.encrypt(plaintext.plaintext, result);
-
     key = result;
 
-    res.send({ key: key, encrypted: encrypted });
+    pad.encrypt(plaintext.plaintext, result).then(function (result) {
+
+      encrypted = result.ciphertext;
+
+      key = result.key;
+
+      //set headers to allow cross origin request
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+      res.setHeader('Access-Control-Allow-Credentials', true);
+
+      res.send({encrypted: encrypted});
+    });
   });
 });
 
 app.post('/api/decrypt', (req, res) => {
 
-  console.log('POST /api/decrypt');
+  console.log('POST /api/decrypt from IP: ' + req.socket.remoteAddress);
 
-  let encrypt = req.body;
+  let encrypted = req.body;
 
   let plaintext = "";
 
-  plaintext = pad.decrypt(encrypt.ciphertext, key);
+  pad.decrypt(encrypted.ciphertext, key).then(function (result) {
+    plaintext = result;
 
-  res.send({ key: key, plaintext: plaintext });
+    //set headers to allow cross origin request
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+
+    res.send({plaintext: plaintext});
+  });
+});
+
+app.get('/api/key', (req, res) => {
+
+  console.log('GET /api/key');
+
+  var exampleKey = "";
+
+  keygen.generateKey().then(function (result) {
+
+    exampleKey = result;
+
+    res.send({ key: exampleKey });
+
+  });
+
 });
 
 app.listen(PORT, () => {

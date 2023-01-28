@@ -8,10 +8,6 @@ module.exports = {
         var response = await fetch("https://qrng.anu.edu.au/wp-content/plugins/colours-plugin/get_block_alpha.php");
     
         var data = await response.text();
-
-        //Remove all digits and special characters
-
-        data = data.replace(/[^a-zA-Z]/g, "");
     
         return data;
     }
