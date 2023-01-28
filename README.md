@@ -38,7 +38,7 @@ output: {"plaintext":"helloworld"}
 <br />
 <br />
 
-You can also access to a simple web interface by searching http://localhost:8080
+You can also access to a simple web interface by going to http://localhost:8080
 
 <br />
 
