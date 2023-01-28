@@ -15,7 +15,7 @@ You can send a POST HTTP request to the following endpoints of http://localhost:
 
 <br />
 
-# example:
+# example
 
 curl -X POST -d '{""plaintext"": ""hello world""}' -H "Content-Type: application/json" http://localhost:8080/api/encrypt
 
@@ -37,6 +37,8 @@ output: {"plaintext":"helloworld"}
 
 <br />
 <br />
+
+# GUI
 
 You can also access to a simple web interface by going to http://localhost:8080
 
