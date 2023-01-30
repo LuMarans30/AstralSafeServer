@@ -1,6 +1,11 @@
 var express = require('express');
-var keygen = require('./keygen.js');
-var pad = require('./otp.js');
+var aes = require('./crypt-decrypt.js');
+const ngrok = require('ngrok');
+let keygen = require('qrand');
+
+require('dotenv').config();
+
+var db = require('./createdb.js');
 
 const app = express();
 
@@ -8,7 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('./'));
-
 
 const PORT = process.env.PORT || 8080;
 
@@ -21,54 +25,68 @@ app.get('/', (req, res) => {
 
 let key = "";
 
-app.post('/api/encrypt', (req, res) => {
+let license = "";
 
-  console.log('POST /api/encrypt from IP: ' + req.socket.remoteAddress);
+app.post('/api/keygen', (req, res) => {
 
-  let plaintext = req.body;
+  console.log('POST /api/keygen from IP: ' + req.socket.remoteAddress);
 
-  let encrypted = "";
+  let uid = req.body.uid;
 
-  keygen.generateKey().then(function (result) {
+  keygen.getRandomHexOctets(8, function (err, octets) {
+    key = octets;
+    console.log(key);
 
-    key = result;
+    keygen.getRandomHexOctets(4, function (err, octets) {
+      license = octets;
 
-    pad.encrypt(plaintext.plaintext, result).then(function (result) {
+      aes.encrypt(license, key).then(function (result) {
+        license = result;
 
-      encrypted = result.ciphertext;
+        license = license.join('');
 
-      key = result.key;
+        db.insert(uid, key, license);
 
-      //set headers to allow cross origin request
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-      res.setHeader('Access-Control-Allow-Credentials', true);
+        //set headers to allow cross origin request
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        res.setHeader('Access-Control-Allow-Credentials', true);
 
-      res.send({encrypted: encrypted});
+        res.send({ license: license });
+
+      });
     });
   });
 });
 
-app.post('/api/decrypt', (req, res) => {
+app.post('/api/validate-license', (req, res) => {
 
-  console.log('POST /api/decrypt from IP: ' + req.socket.remoteAddress);
+  console.log('POST /api/validate-license from IP: ' + req.socket.remoteAddress);
 
-  let encrypted = req.body;
+  let json = req.body;
 
-  let plaintext = "";
+  let uid = json.uid;
+  let license = json.license;
 
-  pad.decrypt(encrypted.ciphertext, key).then(function (result) {
-    plaintext = result;
+  //set headers to allow cross origin request
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
 
-    //set headers to allow cross origin request
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+  let dblicense = "";
 
-    res.send({plaintext: plaintext});
+  db.getUID(uid).then(function (result) {
+    dblicense = result;
+
+    if (dblicense.license == license) {
+      res.send({ key: dblicense.key });
+    } else { 
+      res.send({ valid: false });
+    }
   });
+
 });
 
 app.get('/api/key', (req, res) => {
@@ -87,6 +105,15 @@ app.get('/api/key', (req, res) => {
 
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at: http://localhost:${PORT}/`);
-});
+app.listen(PORT, '0.0.0.0');
+
+(async function () {
+
+  ngrok.authtoken(process.env.NGROK_AUTHTOKEN);
+
+  const url = await ngrok.connect(PORT);
+
+  console.log("\nAccess the website and API from everywhere at the following URL: " + url);
+})();
+
+console.log(`Server running on localhost:${PORT}`);

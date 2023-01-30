@@ -13,58 +13,32 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/main.css" />
-    <!-- Custom JS -->
-    <script src="/js/app.js"></script>
     
-    <title>Quantum OTP</title>
+    <title>AstralSafe HomePage</title>
 </head>
 
 <body>
-    <section id="bg" class="vh-100">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card shadow-2-strong" style="border-radius: 1rem;">
-                        <div class="card-body p-5 text-center">
 
-                            <h3>One time pad using </h3>
-                            <h3 id="quantum">QRNG</h3>
-
-                            <hr class="my-4">
-
-                            <div class="form-outline mb-4">
-                                <label class="form-label" for="msg">Message</label>
-                                <input type="text" id="msg" class="form-control form-control-lg" />
-                            </div>
-
-                            <div role="group" class="d-flex align-items-end justify-content-center btn-group">
-
-                                <button id="encrypt" class="btn btn-primary btn-lg" type="button"
-                                    onclick="encrypt()">Encrypt</button>
-
-                                <button id="decrypt" class="btn btn-primary btn-lg" type="button"
-                                    onclick="decrypt()">Decrypt</button>
-
-                            </div>
-
-                            <hr class="my-4">
-
-                            <div class="form-group">
-                                <label for="result">Risultato:</label>
-                                <textarea class="form-control rounded-0" id="result" rows="1" readonly></textarea>
-                                <div id="copy-btn" onclick="copyToClipboard()">
-                                    <i class="fa-solid fa-copy"></i>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div style="justify-content: center;" class="container-fluid">
+            <a id="title" class="navbar-brand" href="#">AstralSafe</a>
         </div>
-    </section>
+    </nav>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <div id="content" class="container">
+
+        <h3>AstralSafeServer è in esecuzione.</h3>
+
+        Gli endpoint sono i seguenti (metodo POST):
+
+        <br />
+
+        <ul>
+            <li>/api/keygen</li>
+            <li>/api/validate-license</li>
+        </ul>
+
+    </div>
 
 </body>
 
