@@ -2,43 +2,41 @@
 A  basic webserver that encrypts and decrypts a message using one time pad and a quantum random string as a key.
 
 
-# usage
+# Usage
 
 You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
-{"plaintext": ""} or {"ciphertext": ""}.
+{"uid": ""} or {"uid": "", "license": ""}.
 
 <br />
 
 <ul>
-  <li> /api/encrypt </li>
-  <li> /api/decrypt </li>
+  <li> /api/keygen </li>
+  <li> /api/validate-license </li>
 </ul>
 
 <br />
 
-# example
+# Example
 
-curl -X POST -d '{""plaintext"": ""hello world""}' -H "Content-Type: application/json" http://localhost:8080/api/encrypt
+curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx""}' -H "Content-Type: application/json" http://localhost:8080/api/keygen
 
 <br/>
 
-output: {"encrypted":"lgjpdqffex"}
-
-<br />
-
-Please note: the encrypted string will be different each time you make a request to the server.
+output: {"license":"xxx"}
 
 <br /><br />
 
-curl -X POST -d '{""ciphertext"": ""lgjpdqffex""}' -H "Content-Type: application/json" http://localhost:8080/api/decrypt
+curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx"", ""license"": ""xxx""}' -H "Content-Type: application/json" http://localhost:8080/api/validate-license
 
 <br />
 
-output: {"plaintext":"helloworld"}
+if the license is valid, the output will be: {"key": "xxx"}
+
+else the output will be: {"valid": "false"}
 
 <br />
 <br />
 
-# GUI
+# Website
 
-A simple web interface can also be accessed by visiting http://localhost:8080
+To check if the server is running, you can go to http://localhost:8080/.

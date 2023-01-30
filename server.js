@@ -89,22 +89,6 @@ app.post('/api/validate-license', (req, res) => {
 
 });
 
-app.get('/api/key', (req, res) => {
-
-  console.log('GET /api/key');
-
-  var exampleKey = "";
-
-  keygen.generateKey().then(function (result) {
-
-    exampleKey = result;
-
-    res.send({ key: exampleKey });
-
-  });
-
-});
-
 app.listen(PORT, '0.0.0.0');
 
 (async function () {
