@@ -16,10 +16,6 @@ body {
 
 #content {
 
-    /**
-    Center content horizontally and vertically
-    **/
-
     display: flex;
     flex-direction: column;
     justify-content: center;
