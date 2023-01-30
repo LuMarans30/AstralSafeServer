@@ -1,5 +1,5 @@
 # AstralSafe
-A basic web server for AstralSafe license generation and validation using Node.js and Express.js.
+A basic web server for AstralSafe license generation and validation using Node.js and Express.js.<br />
 The license is generated using AES and a quantum random key.
 
 # Usage
@@ -24,7 +24,7 @@ curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx""}' -H "Content-Type: applicati
 
 output: {"license":"xxx"}
 
-<br /><br />
+<hr />
 
 curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx"", ""license"": ""xxx""}' -H "Content-Type: application/json" http://localhost:8080/api/validate-license
 
