@@ -1,6 +1,6 @@
 # AstralSafe
-A  basic webserver that encrypts and decrypts a message using one time pad and a quantum random string as a key.
-
+A basic web server for AstralSafe license generation and validation using Node.js and Express.js.
+The license is generated using AES and a quantum random key.
 
 # Usage
 
