@@ -29,6 +29,12 @@ let license = "";
 
 app.post('/api/keygen', (req, res) => {
 
+  //set headers to allow cross origin request
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
   console.log('POST /api/keygen from IP: ' + req.socket.remoteAddress);
 
   let uid = req.body.uid;
@@ -49,22 +55,17 @@ app.post('/api/keygen', (req, res) => {
         license = license.join('');
         key = key.join('');
 
-        db.getUID(uid).then(function (result) {
-          if (result == "License not found") {
-            db.insert(uid, key, license).then(function (result) {
-              console.log(result);
-            });
-          }
+        db.insert(uid, key, license).then(function (result) {
+          console.log(result);
+
+          db.getUID(uid).then(function (result) {
+            if (result == "License not found") {
+              res.send({ key, license });
+            } else {
+              res.send({ key: result.key, license: result.license })
+            }
+          });
         });
-
-        //set headers to allow cross origin request
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-
-        res.send({ key, license });
-
       });
     });
   });

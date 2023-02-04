@@ -65,14 +65,7 @@ module.exports =
                 const db = client.db('licensesdb');
                 const collection = db.collection('licenses');
 
-                return collection.insertOne({ uid: uid, key: key, license: license }).then((result) => {
-                    if (result) {
-                        console.log('License inserted');
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
+                return collection.updateOne({ uid: uid }, { $setOnInsert: { uid: uid, key: key, license: license } }, { upsert: true })
             }
             ).catch(err => {
                 console.error(err);
