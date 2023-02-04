@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('./'));
 
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 
 app.get('/', (req, res) => {
 
@@ -33,19 +33,29 @@ app.post('/api/keygen', (req, res) => {
 
   let uid = req.body.uid;
 
-  keygen.getRandomHexOctets(8, function (err, octets) {
-    key = octets;
+  keygen.getRandomHexOctets(16, function (err, octets) {
+    key = octets.join('').split(/(.{4})/).filter(Boolean);
     console.log(key);
 
     keygen.getRandomHexOctets(4, function (err, octets) {
+
+      console.log(octets);
+
       license = octets;
 
       aes.encrypt(license, key).then(function (result) {
         license = result;
 
         license = license.join('');
+        key = key.join('');
 
-        db.insert(uid, key, license);
+        db.getUID(uid).then(function (result) {
+          if (result == "License not found") {
+            db.insert(uid, key, license).then(function (result) {
+              console.log(result);
+            });
+          }
+        });
 
         //set headers to allow cross origin request
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -53,7 +63,7 @@ app.post('/api/keygen', (req, res) => {
         res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
         res.setHeader('Access-Control-Allow-Credentials', true);
 
-        res.send({ license: license });
+        res.send({ key, license });
 
       });
     });
@@ -78,11 +88,12 @@ app.post('/api/validate-license', (req, res) => {
   let dblicense = "";
 
   db.getUID(uid).then(function (result) {
+
     dblicense = result;
 
     if (dblicense.license == license) {
       res.send({ key: dblicense.key });
-    } else { 
+    } else {
       res.send({ valid: false });
     }
   });

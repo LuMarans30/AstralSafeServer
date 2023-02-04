@@ -12,12 +12,12 @@ module.exports =
 
         var license = "";
 
-        function main() {
+        async function main() {
 
             const uri = process.env.MONGODB_URI;
             const client = new MongoClient(uri, { useNewUrlParser: true });
 
-            return client.connect().then(() => {
+            return client.connect().then(async () => {
 
                 const db = client.db('licensesdb');
                 const collection = db.collection('licenses');
@@ -53,15 +53,14 @@ module.exports =
      * @param {string} key
      * @param {string} license
     */
-    insert: function insert(uid, key, license) {
+    insert: async function insert(uid, key, license) {
 
-        function main() {
+        async function main() {
 
-            const uri =
-                '';
+            const uri = process.env.MONGODB_URI;
             const client = new MongoClient(uri, { useNewUrlParser: true });
 
-            return client.connect().then(() => {
+            return client.connect().then( async () => {
 
                 const db = client.db('licensesdb');
                 const collection = db.collection('licenses');
