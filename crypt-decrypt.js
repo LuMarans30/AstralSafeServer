@@ -1,34 +1,35 @@
-var AES = require('aes');
+import AES from 'aes';
 
-module.exports = {
-    /**
-     * Encrypt a message using a key using the AES algorithm
-     * @returns {Promise<string>} ciphertext
-     * @param {string} plaintext
-     * @param {string} key
-     */
-    encrypt: async function encrypt(license, key) {
-        var ciphertext = "";
+/**
+* Encrypt a message using a key using the AES algorithm
+* @returns {Promise<string>} ciphertext
+* @param {string} plaintext
+* @param {string} key
+*/
+export async function encrypt(license, key) {
+    
+    var ciphertext = "";
 
-        var aes = new AES(key);
+    var aes = new AES(key);
 
-        ciphertext = aes.encrypt(license);
+    ciphertext = aes.encrypt(license);
 
-        return ciphertext;
-    },
-    /**
-     * Decrypt a message using a key using the AES algorithm
-     * @returns {Promise<string>} plaintext
-     * @param {string} ciphertext
-     * @param {string} key
-     */
-    decrypt: async function decrypt(ciphertext, key) {
-        var plaintext = "";
+    return ciphertext;
+}
 
-        var aes = new AES(key);
+/**
+* Decrypt a message using a key using the AES algorithm
+* @returns {Promise<string>} plaintext
+* @param {string} ciphertext
+* @param {string} key
+*/
+export async function decrypt(ciphertext, key) {
 
-        plaintext = aes.decrypt(ciphertext);
+    var plaintext = "";
 
-        return plaintext;
-    }
+    var aes = new AES(key);
+
+    plaintext = aes.decrypt(ciphertext);
+
+    return plaintext;
 }

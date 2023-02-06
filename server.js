@@ -1,16 +1,18 @@
-var express = require('express');
-var aes = require('./crypt-decrypt.js');
-const ngrok = require('ngrok');
-let keygen = require('qrand');
+import express, { json as _json, urlencoded  } from 'express';
+import { encrypt } from './crypt-decrypt.js';
+import { authtoken, connect } from 'ngrok';
+import { getRandomHexOctets } from 'qrand';
 
-require('dotenv').config();
+import dotenv from 'dotenv';
 
-var db = require('./createdb.js');
+dotenv.config();
+
+import { insert, getUID } from './createdb.js';
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(_json());
+app.use(urlencoded({ extended: true }));
 
 app.use(express.static('./'));
 
@@ -39,26 +41,26 @@ app.post('/api/keygen', (req, res) => {
 
   let uid = req.body.uid;
 
-  keygen.getRandomHexOctets(16, function (err, octets) {
+  getRandomHexOctets(16, function (err, octets) {
     key = octets.join('').split(/(.{4})/).filter(Boolean);
     console.log(key);
 
-    keygen.getRandomHexOctets(4, function (err, octets) {
+    getRandomHexOctets(4, function (err, octets) {
 
       console.log(octets);
 
       license = octets;
 
-      aes.encrypt(license, key).then(function (result) {
+      encrypt(license, key).then(function (result) {
         license = result;
 
         license = license.join('');
         key = key.join('');
 
-        db.insert(uid, key, license).then(function (result) {
+        insert(uid, key, license).then(function (result) {
           console.log(result);
 
-          db.getUID(uid).then(function (result) {
+          getUID(uid).then(function (result) {
             if (result == "License not found") {
               res.send({ key, license });
             } else {
@@ -88,7 +90,7 @@ app.post('/api/validate-license', (req, res) => {
 
   let dblicense = "";
 
-  db.getUID(uid).then(function (result) {
+  getUID(uid).then(function (result) {
 
     dblicense = result;
 
@@ -105,9 +107,9 @@ app.listen(PORT, '0.0.0.0');
 
 (async function () {
 
-  ngrok.authtoken(process.env.NGROK_AUTHTOKEN);
+  authtoken(process.env.NGROK_AUTHTOKEN);
 
-  const url = await ngrok.connect(PORT);
+  const url = await connect(PORT);
 
   console.log("\nAccess the website and API from everywhere at the following URL: " + url);
 })();

@@ -1,6 +1,7 @@
 {
   "name": "astralsafeserver",
   "version": "1.0.0",
+  "type": "module",
   "description": "server",
   "main": "server.js",
   "scripts": {
