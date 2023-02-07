@@ -29,12 +29,6 @@ let license = "";
 
 app.post('/api/keygen', (req, res) => {
 
-  //set headers to allow cross origin request
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
   console.log('POST /api/keygen from IP: ' + req.socket.remoteAddress);
 
   let uid = req.body.uid;
@@ -50,22 +44,26 @@ app.post('/api/keygen', (req, res) => {
       license = octets;
 
       aes.encrypt(license, key).then(function (result) {
-        license = result;
 
-        license = license.join('');
+        license = result.join('');
         key = key.join('');
 
-        db.insert(uid, key, license).then(function (result) {
-          console.log(result);
+        db.getUID(uid).then(function (result) {
 
-          db.getUID(uid).then(function (result) {
-            if (result == "License not found") {
-              res.send({ key, license });
-            } else {
-              res.send({ key: result.key, license: result.license })
-            }
-          });
+          //set headers to allow cross origin request
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+          res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+          res.setHeader('Access-Control-Allow-Credentials', true);
+
+          if (result == "License not found") {
+            db.insert(uid, key, license);
+            res.send({ key: key, license: license });
+          } else {
+            res.send({ key: result.key, license: result.license });
+          }
         });
+
       });
     });
   });
@@ -112,4 +110,5 @@ app.listen(PORT, '0.0.0.0');
   console.log("\nAccess the website and API from everywhere at the following URL: " + url);
 })();
 
+console.log(`Server running on localhost:${PORT}`);
 console.log(`Server running on localhost:${PORT}`);
