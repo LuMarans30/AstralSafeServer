@@ -10,14 +10,14 @@ module.exports =
     */
     getUID: async function getByUID(uid) {
 
-        var license = "";
+        var jsonData = "";
 
-        async function main() {
+        function main() {
 
             const uri = process.env.MONGODB_URI;
             const client = new MongoClient(uri, { useNewUrlParser: true });
 
-            return client.connect().then(async () => {
+            return client.connect().then(() => {
 
                 const db = client.db('licensesdb');
                 const collection = db.collection('licenses');
@@ -25,9 +25,9 @@ module.exports =
                 return collection.findOne({ uid: uid }).then((result) => {
                     if (result) {
                         console.log('License found');
-                        license = result;
+                        jsonData = result;
                     } else {
-                        license = "License not found";
+                        jsonData = "License not found";
                     }
                 });
             }
@@ -44,7 +44,7 @@ module.exports =
             console.log('Done');
         });
 
-        return license;
+        return jsonData;
     },
     /**
      * Insert a new element into the database
@@ -53,28 +53,31 @@ module.exports =
      * @param {string} key
      * @param {string} license
     */
-    insert: async function insert(uid, key, license) {
+    insert: function insert(uid, key, license) {
 
-        async function main() {
+        function main() {
 
             const uri = process.env.MONGODB_URI;
             const client = new MongoClient(uri, { useNewUrlParser: true });
 
-            return client.connect().then( async () => {
+            client.connect().then(() => {
 
                 const db = client.db('licensesdb');
                 const collection = db.collection('licenses');
 
-                return collection.updateOne({ uid: uid }, { $setOnInsert: { uid: uid, key: key, license: license } }, { upsert: true })
-            }
-            ).catch(err => {
-                console.error(err);
-            }
-            ).finally(() => {
-                client.close();
+                collection.insertOne({ uid: uid, key: key, license: license }).then(() => {
+                    console.log('Inserted');
+                }
+                ).catch(err => {
+                    console.error(err);
+                }
+                ).finally(() => {
+                    client.close();
+                    console.log('Connection closed');
+                });
             });
         }
 
-        main().catch(console.error);
+        main();
     }
 }

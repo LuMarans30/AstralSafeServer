@@ -2,7 +2,7 @@ var AES = require('aes');
 
 module.exports = {
     /**
-     * Encrypt a message using a key using the AES algorithm
+     * Encrypt a message using a key using the OTP algorithm
      * @returns {Promise<string>} ciphertext
      * @param {string} plaintext
      * @param {string} key
@@ -17,7 +17,7 @@ module.exports = {
         return ciphertext;
     },
     /**
-     * Decrypt a message using a key using the AES algorithm
+     * Decrypt a message using a key using the OTP algorithm
      * @returns {Promise<string>} plaintext
      * @param {string} ciphertext
      * @param {string} key
