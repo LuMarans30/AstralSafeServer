@@ -4,6 +4,8 @@ The license is generated using AES and a quantum random key.
 
 # Usage
 
+A better version of the API documentation using [Swagger](https://swagger.io/) is available at https://lumarans30.github.io/AstralSafeServer/ 
+
 You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
 {"uid": ""} or {"uid": "", "license": ""}.
 
