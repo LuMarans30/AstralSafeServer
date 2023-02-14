@@ -1,4 +1,6 @@
 # AstralSafe
+![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/LuMarans30/AstralSafeServer)
+
 A basic web server for AstralSafe license generation and validation using Node.js and Express.js.<br />
 The license is generated using AES and a quantum random key.
 
