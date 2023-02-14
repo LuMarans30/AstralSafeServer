@@ -16,12 +16,20 @@ app.use(express.static('./'));
 
 const PORT = 8080;
 
+app.get('/docs', (req, res) => {
+
+  console.log('GET /docs');
+
+  res.sendFile('docs.html', { root: './' });
+});
+
 app.get('/', (req, res) => {
 
   console.log('GET /');
 
   res.sendFile('index.html', { root: './' });
 });
+
 
 let key = "";
 
