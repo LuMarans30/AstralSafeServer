@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: astralSafe
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/keygen/:
+    post:
+      summary: keygen
+      description: Generates a key and a license, the latter is returned to the client
+      operationId: keygen
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                uid:
+                  $ref: "#/components/schemas/uid"
+      responses:
+        "200":
+          description: "The client receives an encrypted license"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  license:
+                    $ref: "#/components/schemas/license"
+
+  /api/validate-license:
+    post:
+      summary: validate-license
+      description: Validates a given license and returns the corresponding key; if the license is not valid, returns a json object containing the key "valid" with value false.
+      operationId: validateLicense
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                uid:
+                  $ref: "#/components/schemas/uid"
+                license:
+                  $ref: "#/components/schemas/license"
+      responses:
+        "200":
+          description: 'The client receives the key or {"valid":"false"} if the license is not valid'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/key"
+                  - $ref: "#/components/schemas/valid"
+                example:
+                  key: "string"
+                  valid: "false"
+
+components:
+  schemas:
+    uid:
+      type: string
+      description: The User-ID generated on the client-side
+      example: "aaaa-bbbb-cccc-dddd"
+    license:
+      type: string
+      description: The license returned to the client
+      example: "test"
+    key:
+      type: string
+      description: The quantum random key used to encrypt and decrypt the executable
+    valid:
+      type: boolean
+      description: Returned to the client when the license is not valid (can be only false)
+      example: "false"
