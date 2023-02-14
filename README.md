@@ -10,8 +10,6 @@ A better version of the API documentation using [Swagger](https://swagger.io/) i
 
 By running the server locally, you can test API requests with custom attributes via Swagger.
 
-<br />
-
 ## Usage
 
 You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
