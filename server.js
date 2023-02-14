@@ -115,13 +115,13 @@ app.post('/api/validate-license', (req, res) => {
 
 app.listen(PORT, '0.0.0.0');
 
-(async function () {
+/*(async function () {
 
   ngrok.authtoken(process.env.NGROK_AUTHTOKEN);
 
   const url = await ngrok.connect(PORT);
 
   console.log("\nAccess the website and API from everywhere at the following URL: " + url);
-})();
+})();*/
 
 console.log(`Server running on localhost:${PORT}`);
