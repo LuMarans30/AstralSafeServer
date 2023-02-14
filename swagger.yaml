@@ -13,22 +13,22 @@ paths:
       operationId: keygen
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
                 uid:
-                  $ref: "#/components/schemas/uid"
+                  $ref: '#/components/schemas/uid'
       responses:
-        "200":
-          description: "The client receives an encrypted license"
+        '200':
+          description: 'The client receives an encrypted license'
           content:
             application/json:
-              schema:
+              schema: 
                 type: object
                 properties:
                   license:
-                    $ref: "#/components/schemas/license"
+                    $ref: '#/components/schemas/license'
 
   /api/validate-license:
     post:
@@ -37,37 +37,37 @@ paths:
       operationId: validateLicense
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
                 uid:
-                  $ref: "#/components/schemas/uid"
+                  $ref: '#/components/schemas/uid'
                 license:
-                  $ref: "#/components/schemas/license"
+                  $ref: '#/components/schemas/license'
       responses:
-        "200":
+        '200':
           description: 'The client receives the key or {"valid":"false"} if the license is not valid'
           content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/key"
-                  - $ref: "#/components/schemas/valid"
-                example:
-                  key: "string"
-                  valid: "false"
+              application/json:
+                schema: 
+                  oneOf:
+                    - $ref: '#/components/schemas/key'
+                    - $ref: '#/components/schemas/valid'
+                  example:
+                    key: "string"
+                    valid: "false"
 
 components:
   schemas:
     uid:
       type: string
       description: The User-ID generated on the client-side
-      example: "aaaa-bbbb-cccc-dddd"
+      example: 'aaaa-bbbb-cccc-dddd'
     license:
       type: string
       description: The license returned to the client
-      example: "test"
+      example: 'test'
     key:
       type: string
       description: The quantum random key used to encrypt and decrypt the executable
