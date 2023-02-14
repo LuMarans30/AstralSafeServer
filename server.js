@@ -20,7 +20,7 @@ app.get('/docs', (req, res) => {
 
   console.log('GET /docs');
 
-  res.sendFile('docs.html', { root: './' });
+  res.sendFile('docs.html', { root: './dist' });
 });
 
 app.get('/', (req, res) => {
