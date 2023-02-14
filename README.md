@@ -1,5 +1,10 @@
 # AstralSafe
 ![GitHub](https://img.shields.io/github/license/LuMarans30/AstralSafeServer)
+![GitHub repo size](https://img.shields.io/github/languages/repo-size/LuMarans30/AstralSafeServer)
+![Lines of code](https://img.shields.io/tokei/lines/github/LuMarans30/AstralSafeServer)
+![GitHub issues](https://img.shields.io/github/issues/LuMarans30/AstralSafeServer)
+![Website](https://img.shields.io/website?down_message=down&up_message=online&url=https%3A%2F%2Flumarans30.github.io%2FAstralSafeServer%2F)
+![GitHub last commit](https://img.shields.io/github/last-commit/LuMarans30/AstralSafeServer)
 
 A basic web server for AstralSafe license generation and validation using Node.js and Express.js.<br />
 The license is generated using AES and a quantum random key.
