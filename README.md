@@ -2,9 +2,13 @@
 A basic web server for AstralSafe license generation and validation using Node.js and Express.js.<br />
 The license is generated using AES and a quantum random key.
 
-## Docs and usage
+## Docs
 
-A better version of the API documentation using [Swagger](https://swagger.io/) is available at https://lumarans30.github.io/AstralSafeServer/ or http://localhost:8080/docs.
+A better version of the API documentation using [Swagger](https://swagger.io/) is available at https://lumarans30.github.io/AstralSafeServer/ or at http://localhost:8080/docs.
+
+<br />
+
+## Usage
 
 You can send a POST HTTP request to the following endpoints of http://localhost:8080 with the params: <br />
 {"uid": ""} or {"uid": "", "license": ""}.
