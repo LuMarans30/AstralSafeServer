@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 
   console.log('GET /');
 
-  res.sendFile('index.html', { root: './' });
+  res.sendFile('index.html', { root: './web' });
 });
 
 
