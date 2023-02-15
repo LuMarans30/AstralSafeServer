@@ -1,4 +1,5 @@
-# AstralSafe
+# AstralSafeServer
+
 ![GitHub](https://img.shields.io/github/license/LuMarans30/AstralSafeServer)
 ![GitHub repo size](https://img.shields.io/github/repo-size/LuMarans30/AstralSafeServer)
 ![Lines of code](https://img.shields.io/tokei/lines/github/LuMarans30/AstralSafeServer)
@@ -37,15 +38,15 @@ curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx""}' -H "Content-Type: applicati
 
 <br/>
 
-output: {"license":"xxx"}
+output: {"key": "string", "license":"string"}
 
 <hr />
 
-curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx"", ""license"": ""xxx""}' -H "Content-Type: application/json" http://localhost:8080/api/validate-license
+curl -X POST -d '{""uid"": ""xxxx-xxxx-xxxx-xxxx"", ""license"": ""string""}' -H "Content-Type: application/json" http://localhost:8080/api/validate-license
 
 <br />
 
-if the license is valid, the output will be: {"key": "xxx"}
+if the license is valid, the output will be: {"key": "string"}
 
 else the output will be: {"valid": "false"}
 
