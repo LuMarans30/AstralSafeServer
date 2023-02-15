@@ -27,6 +27,8 @@ paths:
               schema: 
                 type: object
                 properties:
+                  key:
+                    $ref: '#/components/schemas/key'
                   license:
                     $ref: '#/components/schemas/license'
 
