@@ -9,7 +9,8 @@
 
 A basic web server for AstralSafe license generation and validation using Node.js and Express.js.<br />
 The license is generated using AES and a quantum random key.
-A simple client is available at https://www.github.com/LuMarans30/AstralSafeClient/.
+
+A simple client can be found [here](https://www.github.com/LuMarans30/AstralSafeClient/)
 
 ## Docs
 
