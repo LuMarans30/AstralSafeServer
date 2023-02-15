@@ -10,41 +10,26 @@ module.exports =
     */
     getUID: async function getByUID(uid) {
 
-        var jsonData = "";
+        const uri = process.env.MONGODB_URI;
+        const client = new MongoClient(uri, { useNewUrlParser: true });
 
-        function main() {
+        return client.connect().then(async () => {
+            const db = client.db('licensesdb');
+            const collection = db.collection('licenses');
 
-            const uri = process.env.MONGODB_URI;
-            const client = new MongoClient(uri, { useNewUrlParser: true });
-
-            return client.connect().then(() => {
-
-                const db = client.db('licensesdb');
-                const collection = db.collection('licenses');
-
-                return collection.findOne({ uid: uid }).then((result) => {
-                    if (result) {
-                        console.log('License found');
-                        jsonData = result;
-                    } else {
-                        jsonData = "License not found";
-                    }
-                });
+            const result = await collection.findOne({ uid: uid });
+            if (result) {
+                console.log('License found');
+                return result;
+            } else {
+                return "License not found";
             }
-            ).catch(err => {
-                console.error(err);
-            }
-            ).finally(() => {
-                client.close();
-                console.log('Connection closed');
-            });
-        }
-
-        await main().catch(console.error).then(() => {
-            console.log('Done');
+        }).catch((err) => {
+            console.error(err);
+        }).finally(() => {
+            console.log('Connection closed');
+            client.close();
         });
-
-        return jsonData;
     },
     /**
      * Insert a new element into the database
@@ -53,31 +38,25 @@ module.exports =
      * @param {string} key
      * @param {string} license
     */
-    insert: function insert(uid, key, license) {
+    insert: async function insert(uid, key, license) {
 
-        function main() {
+        const uri = process.env.MONGODB_URI;
+        const client = new MongoClient(uri, { useNewUrlParser: true });
 
-            const uri = process.env.MONGODB_URI;
-            const client = new MongoClient(uri, { useNewUrlParser: true });
+        return await client.connect().then(() => {
+            const db = client.db('licensesdb');
+            const collection = db.collection('licenses');
 
-            client.connect().then(() => {
-
-                const db = client.db('licensesdb');
-                const collection = db.collection('licenses');
-
-                collection.insertOne({ uid: uid, key: key, license: license }).then(() => {
-                    console.log('Inserted');
-                }
-                ).catch(err => {
-                    console.error(err);
-                }
-                ).finally(() => {
-                    client.close();
-                    console.log('Connection closed');
-                });
+            return collection.insertOne({ uid: uid, key: key, license: license }).then(() => {
+                console.log('Inserted');
+            }).catch((err) => {
+                console.error(err);
+            }).finally(() => {
+                console.log('Connection closed');
+                client.close();
             });
-        }
-
-        main();
+        }).catch((err) => {
+            console.error(err);
+        });
     }
 }

@@ -1,26 +1,20 @@
 var express = require('express');
+const cors = require('cors');
 var aes = require('./crypt-decrypt.js');
+var db = require('./createdb.js');
 const ngrok = require('ngrok');
-let keygen = require('qrand');
+let qrand = require('qrand');
 
 require('dotenv').config();
 
-var db = require('./createdb.js');
-
 const app = express();
+
+const PORT = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static('./'));
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://lumarans30.github.io");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-const PORT = 8080;
+app.use(cors());
 
 app.get('/docs', (req, res) => {
 
@@ -36,80 +30,75 @@ app.get('/', (req, res) => {
   res.sendFile('index.html', { root: './web' });
 });
 
-
-let key = "";
-
-let license = "";
-
-app.post('/api/keygen', (req, res) => {
-
-  console.log('POST /api/keygen from IP: ' + req.socket.remoteAddress);
-
-  let uid = req.body.uid;
-
-  keygen.getRandomHexOctets(16, function (err, octets) {
-    key = octets.join('').split(/(.{4})/).filter(Boolean);
-    console.log(key);
-
-    keygen.getRandomHexOctets(4, function (err, octets) {
-
-      console.log(octets);
-
-      license = octets;
-
-      aes.encrypt(license, key).then(function (result) {
-
-        license = result.join('');
-        key = key.join('');
-
-        db.getUID(uid).then(function (result) {
-
-          //set headers to allow cross origin request
-          res.setHeader('Access-Control-Allow-Origin', '*');
-          res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-          res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-          res.setHeader('Access-Control-Allow-Credentials', true);
-
-          if (result == "License not found") {
-            db.insert(uid, key, license);
-            res.send({ key: key, license: license });
-          } else {
-            res.send({ key: result.key, license: result.license });
-          }
-        });
-
-      });
+function getRandomHexOctets(n) {
+  return new Promise(function (resolve, reject) {
+    qrand.getRandomHexOctets(n, function (err, octets) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(octets);
+      }
     });
   });
+}
+
+app.post('/api/keygen', async (req, res) => {
+
+  try {
+
+    console.log('POST /api/keygen from IP: ' + req.socket.remoteAddress);
+
+    const uid = req.body.uid;
+    let encryptedLicense = null;
+    let key = null;
+
+    await getRandomHexOctets(16).then(async (octets16) => {
+      key = octets16.join('').split(/(.{4})/).filter(Boolean)
+
+      await getRandomHexOctets(4).then((octets4) => {
+        const license = octets4
+        encryptedLicense = aes.encrypt(license, key)
+      });
+    });
+
+    const result = await db.getUID(uid);
+
+    if (result === 'License not found') {
+
+      await db.insert(uid, key.join(''), encryptedLicense.join(''));
+      res.send({ key: key.join(''), license: encryptedLicense.join('') });
+
+    } else {
+      res.send({ key: result.key, license: result.license });
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
+
 });
 
-app.post('/api/validate-license', (req, res) => {
+app.post('/api/validate-license', async (req, res) => {
 
-  console.log('POST /api/validate-license from IP: ' + req.socket.remoteAddress);
+  try {
 
-  let json = req.body;
+    console.log('POST /api/validate-license from IP: ' + req.socket.remoteAddress);
+    const { uid, license } = req.body;
+    const dblicense = await db.getUID(uid);
 
-  let uid = json.uid;
-  let license = json.license;
+    if (dblicense.license === license) {
 
-  //set headers to allow cross origin request
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  let dblicense = "";
-
-  db.getUID(uid).then(function (result) {
-
-    dblicense = result;
-
-    if (dblicense.license == license) {
       res.send({ key: dblicense.key });
+
     } else {
       res.send({ valid: false });
     }
-  });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
+  }
 
 });
 

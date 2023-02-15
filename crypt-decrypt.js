@@ -2,33 +2,23 @@ var AES = require('aes');
 
 module.exports = {
     /**
-     * Encrypt a message using a key using the OTP algorithm
-     * @returns {Promise<string>} ciphertext
+     * Encrypt a message using a key using the AES algorithm
+     * @returns {string} ciphertext
      * @param {string} plaintext
      * @param {string} key
      */
-    encrypt: async function encrypt(license, key) {
-        var ciphertext = "";
+    encrypt: function encrypt(license, key) {
 
-        var aes = new AES(key);
-
-        ciphertext = aes.encrypt(license);
-
-        return ciphertext;
+        return new AES(key).encrypt(license);
     },
     /**
-     * Decrypt a message using a key using the OTP algorithm
-     * @returns {Promise<string>} plaintext
+     * Decrypt a message using a key using the AES algorithm
+     * @returns {string} plaintext
      * @param {string} ciphertext
      * @param {string} key
      */
-    decrypt: async function decrypt(ciphertext, key) {
-        var plaintext = "";
+    decrypt: function decrypt(ciphertext, key) {
 
-        var aes = new AES(key);
-
-        plaintext = aes.decrypt(ciphertext);
-
-        return plaintext;
+        return new AES(key).decrypt(ciphertext);
     }
 }
